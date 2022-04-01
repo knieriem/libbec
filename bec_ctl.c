@@ -230,14 +230,14 @@ bec_step(Becinst *inst, void *outvals)
 int
 bec_getstate(Becinst *inst, Becstate *state)
 {
-	uint32 sz;
+	uint32 n;
 	int st;
 
-	st = bsec_get_state(0, state->data, BSEC_MAX_STATE_BLOB_SIZE, work.buf, sizeof work.buf, &sz);
+	st = bsec_get_state(0, state->data, BSEC_MAX_STATE_BLOB_SIZE, work.buf, sizeof work.buf, &n);
 	if (st != 0) {
 		return error(inst, st, BecFailctxGetstate);
 	}
-	state->ndata = sz;
+	state->ndata = n;
 	state->timestamp = inst->timestamp;
 	state->nextcall = inst->nextcall;
 	return 0;	
