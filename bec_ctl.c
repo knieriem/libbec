@@ -97,22 +97,29 @@ bec_updatesubscriptions(Becinst *inst, float32 sample_rate)
 int
 bec_init(Becinst *inst, float32 sample_rate)
 {
-	uint8 *conf;
-	int confsz;
+	Bsecconf bc;
+	int skipstate;
 	int st;
 
+	skipstate = 0;
+retry:
 	st = bsec_init();
 	if (st != 0) {
 		return error(inst, st, BecFailctxInit);
 	}
-	conf = inst->sensor->bsecconf(&confsz);
-	st = bsec_set_configuration(conf, confsz, work.buf, sizeof work.buf);
+	inst->sensor->bsecconf(&bc);
+	st = bsec_set_configuration(bc.conf, bc.confsize, work.buf, sizeof work.buf);
 	if (st != 0) {
 		return error(inst, st, BecFailctxSetconf);
 	}
 
-	if (bec_setstate(inst) == -1) {
-		return -1;
+	if (!skipstate)
+	if (bec_setstate(inst, &bc.state) == -1) {
+		/* unsure, if the bsec library is in a clean state now,
+		 * it may be safer to initialize again completely
+		 */
+		skipstate = 1;
+		goto retry;
 	}
 
 	st = updatesubscriptions(inst->conf, sample_rate);
@@ -221,31 +228,34 @@ bec_step(Becinst *inst, void *outvals)
 }
 
 int
-bec_getstate(Becinst *inst)
+bec_getstate(Becinst *inst, Becstate *state)
 {
 	uint32 sz;
 	int st;
 
-	st = bsec_get_state(0, inst->state.buf, sizeof inst->state.buf, work.buf, sizeof work.buf, &sz);
+	st = bsec_get_state(0, state->data, BSEC_MAX_STATE_BLOB_SIZE, work.buf, sizeof work.buf, &sz);
 	if (st != 0) {
 		return error(inst, st, BecFailctxGetstate);
 	}
-	inst->state.n = sz;
+	state->ndata = sz;
+	state->timestamp = inst->timestamp;
+	state->nextcall = inst->nextcall;
 	return 0;	
 }
 
 int
-bec_setstate(Becinst *inst)
+bec_setstate(Becinst *inst, Becstate *state)
 {
 	int st;
 
-	if (inst->state.n == 0) {
+	if (state->ndata == 0) {
 		return 0;
 	}
-	st = bsec_set_state(&inst->state.buf[0], inst->state.n, work.buf, sizeof work.buf);
+	st = bsec_set_state(&state->data[0], state->ndata, work.buf, sizeof work.buf);
 	if (st != 0) {
 		return error(inst, st, BecFailctxSetstate);
 	}
+	inst->nextcall = state->timestamp;
 	return 0;	
 }
 

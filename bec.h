@@ -48,11 +48,6 @@ struct Becinst {
 	int64 timestamp;
 	int64 nextcall;
 
-	struct {
-		uchar buf[BSEC_MAX_STATE_BLOB_SIZE];
-		int n;
-	} state;
-
 	Bmeinst bme;
 
 	int8 err;
@@ -80,8 +75,26 @@ struct Becconf {
 	void (*yield)(void);
 };
 
+typedef struct Becstate Becstate;
+
+struct Becstate {
+	uchar *data;
+	int ndata;
+
+	int64 timestamp;
+	int64 nextcall;
+};
+
+typedef struct Bsecconf Bsecconf;
+
+struct Bsecconf {
+	uchar *conf;
+	int confsize;
+	Becstate state;
+};
+
 struct Becsensor {
-	uint8* (*bsecconf)(int *sz);
+	void (*bsecconf)(Bsecconf*);
 
 	Becbmedrv *bmedrv;
 	void*	bmedev;
@@ -106,5 +119,5 @@ extern	int	bec_step(Becinst*, void *outvals);
 extern	void (*becdebugbmec)(Becinst*, bsec_bme_settings_t*);
 
 
-extern	int	bec_getstate(Becinst*);
-extern	int	bec_setstate(Becinst*);
+extern	int	bec_getstate(Becinst*, Becstate*);
+extern	int	bec_setstate(Becinst*, Becstate*);
