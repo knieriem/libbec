@@ -44,13 +44,13 @@ sigasfixed(BecOutconf *c, void *v, bsec_output_t *o, int expshift)
 void
 becsig_asfixed19(BecOutconf *c, void *v, bsec_output_t *o)
 {
-	sigasfixed(c, v, o, -4);
+	sigasfixed(c, v, o, 19-23);
 }
 
 void
 becsig_asfixed0(BecOutconf *c, void *v, bsec_output_t *o)
 {
-	sigasfixed(c, v, o, -23);
+	sigasfixed(c, v, o, 0-23);
 }
 
 void
