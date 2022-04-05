@@ -50,6 +50,7 @@ struct Becinst {
 
 	Bmeinst bme;
 
+	int8 stateerr;
 	int8 err;
 	int errctx;
 };

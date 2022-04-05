@@ -101,6 +101,7 @@ bec_init(Becinst *inst, float32 sample_rate)
 	int skipstate;
 	int st;
 
+	inst->stateerr = 0;
 	skipstate = 0;
 retry:
 	st = bsec_init();
@@ -115,6 +116,8 @@ retry:
 
 	if (!skipstate)
 	if (bec_setstate(inst, &bc.state) == -1) {
+		inst->stateerr = inst->err;
+
 		/* unsure, if the bsec library is in a clean state now,
 		 * it may be safer to initialize again completely
 		 */
