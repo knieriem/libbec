@@ -35,7 +35,6 @@ updatefilter(Calstats *st, int state, int ischange)
 {
 	Calstatsfilter *f;
 	Calstatspoint *pt;
-	int incr;
 
 	f = &st->state->f;
 	pt = &st->pt[f->ipt];
