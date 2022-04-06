@@ -258,7 +258,7 @@ bec_setstate(Becinst *inst, Becstate *state)
 	if (st != 0) {
 		return error(inst, st, BecFailctxSetstate);
 	}
-	inst->nextcall = state->timestamp;
+	inst->nextcall = state->nextcall;
 	return 0;	
 }
 
