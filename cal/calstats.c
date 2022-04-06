@@ -39,7 +39,7 @@ updatefilter(Calstats *st, int state, int ischange)
 	f = &st->state->f;
 	pt = &st->pt[f->ipt];
 	if (ischange) {
-		dprint("state", state);
+		dprint("state", state-1);
 		if (incrcnt8(&pt->entered[state])) {
 			f->entered[state]++;
 		}
