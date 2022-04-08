@@ -12,6 +12,7 @@ typedef void BecOutcvtfn(BecOutconf*, void *val, bsec_output_t*);
 extern BecOutcvtfn bec_accuracy;
 extern BecOutcvtfn becsig_asfloat32;
 extern BecOutcvtfn becsig_asfixed0;
+extern BecOutcvtfn becsig_asfixed12;
 extern BecOutcvtfn becsig_asfixed19;
 extern BecOutcvtfn becsig_asint32;
 extern BecOutcvtfn becsig_asint;

@@ -48,6 +48,12 @@ becsig_asfixed19(BecOutconf *c, void *v, bsec_output_t *o)
 }
 
 void
+becsig_asfixed12(BecOutconf *c, void *v, bsec_output_t *o)
+{
+	sigasfixed(c, v, o, 12-23);
+}
+
+void
 becsig_asfixed0(BecOutconf *c, void *v, bsec_output_t *o)
 {
 	sigasfixed(c, v, o, 0-23);
